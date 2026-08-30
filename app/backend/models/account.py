@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, Integer, Numeric, String, func
+from sqlalchemy import CheckConstraint, ForeignKey, Integer, Numeric, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 import datetime
 import decimal
@@ -52,4 +52,9 @@ class Account(Base):
         onupdate=func.now()
     )
 
-    
+    __table_args__ = (
+        CheckConstraint("account_name != ''", name="ck_account_name_not_empty"),
+        CheckConstraint("account_type IN ('checking', 'savings', 'credit_card', 'cash', 'investment', 'loan')", name="ck_valid_account_type"),
+        CheckConstraint("currency IN ('USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD')", name="ck_valid_currency"),
+        CheckConstraint("opening_balance >= 0", name="ck_opening_balance_non_negative"),
+    )

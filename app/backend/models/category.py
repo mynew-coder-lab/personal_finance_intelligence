@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, ForeignKey, func
+from sqlalchemy import CheckConstraint, Integer, String, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column
 import datetime
 from sqlalchemy.sql.sqltypes import DateTime
@@ -35,4 +35,7 @@ class Category(Base):
         ForeignKey("categories.category_id", ondelete="SET NULL"),
         nullable=True,
     )
-
+    __table_args__ = (
+        CheckConstraint("category_name != ''", name="ck_category_name_not_empty"),
+        CheckConstraint("parent_category_id IS NULL OR parent_category_id != category_id", name="ck_parent_category_not_self"),
+    ) 

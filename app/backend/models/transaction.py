@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, Integer, Numeric, String, func
+from sqlalchemy import CheckConstraint, ForeignKey, Integer, Numeric, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 import datetime
 import decimal
@@ -56,4 +56,16 @@ class Transaction(Base):
         DateTime(timezone=True),
         server_default=func.now(),
         onupdate=func.now()
+    )
+
+    __table_args__ = (
+        CheckConstraint("amount > 0", name="ck_amount_positive"),
+        CheckConstraint(
+            "transaction_kind IN ('income', 'expense', 'transfer')",
+            name="ck_valid_transaction_kind"
+        ),
+        CheckConstraint(
+            "payment_method IN ('card', 'upi', 'cash', 'bank_transfer', 'wallet')",
+            name="ck_valid_payment_method"
+        ),
     )
