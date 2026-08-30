@@ -100,3 +100,12 @@ The goal is to keep the system simple enough to develop and understand while mai
 The backend is organized into domain-oriented modules rather than being split into microservices.
 
 
+# Current Scope
+
+The first release is intentionally a web application.
+
+Mobile/cross-platform development, live bank integrations, complex KYC systems, and other advanced infrastructure are outside the current scope.
+
+The system will first focus on building a strong backend and a useful web experience.
+
+Future expansion will be driven by actual user needs rather than adding technology for its own sake.
