@@ -13,6 +13,7 @@ class Category(Base):
         Integer,
         ForeignKey("users.user_id", ondelete="CASCADE"),
         nullable=False,
+        index=True,
     )
 
     category_name: Mapped[str] = mapped_column(

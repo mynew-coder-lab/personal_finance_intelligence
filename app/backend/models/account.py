@@ -14,6 +14,7 @@ class Account(Base):
         Integer,
         ForeignKey("users.user_id", ondelete="CASCADE"),
         nullable=False,
+        index=True,
     )
 
     account_name: Mapped[str] = mapped_column(

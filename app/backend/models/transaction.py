@@ -14,6 +14,7 @@ class Transaction(Base):
         Integer,
         ForeignKey("accounts.account_id", ondelete="CASCADE"),
         nullable=False,
+        index=True,
     )
 
     amount: Mapped[decimal.Decimal] = mapped_column(
@@ -35,6 +36,7 @@ class Transaction(Base):
     transaction_date: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False, 
+        index=True,
     )
 
     payment_method: Mapped[str] = mapped_column(

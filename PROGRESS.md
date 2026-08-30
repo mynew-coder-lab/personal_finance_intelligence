@@ -73,11 +73,12 @@ The core database migration has been applied and verified in `Personal_Finance_d
 - [x] Write the initial SQL schema through the generated migration
 - [x] Set up Alembic migrations
 - [x] Create SQLAlchemy metadata/import setup
+- [x] Define check and unique constraints
+
 ## Upcoming
 
 ### Phase 3: Database Design
 
-- [ ] Define check and unique constraints
 - [ ] Define indexes
 - [ ] Add database tests
 

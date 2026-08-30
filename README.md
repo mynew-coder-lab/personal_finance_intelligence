@@ -9,7 +9,7 @@ Project 1 of a three-project engineering progression.
 
 The primary goal of this project is to build a complete production-minded system from scratch while developing strong backend, database, analytics, and ML engineering fundamentals.
 
-## Overview
+# Overview
 Managing personal finances is not only about recording expenses.
 
 A useful financial system should help a user answer questions such as:
@@ -28,35 +28,35 @@ This project aims to turn raw financial activity into useful financial understan
 Core loop:
 Track -> Understand -> Plan -> Act -> Measure -> Improve
 
-## Features
+# Features
 
-# core features
-User authentication
-Multi-device data synchronization
-Manual transaction entry
-CSV transaction import
-Transaction categorization
-Account management
-Budget planning
-Budget vs. actual spending
-Financial goal tracking
-Net worth calculation
-Monthly and category-based spending analysis
-Recurring transaction detection
-Investment and holding tracking
-XIRR-based investment return calculation
+## core features
+- User authentication
+- Multi-device data synchronization
+- Manual transaction entry
+- CSV transaction import
+- Transaction categorization
+- Account management
+- Budget planning
+- Budget vs. actual spending
+- Financial goal tracking
+- Net worth calculation
+- Monthly and category-based spending analysis
+- Recurring transaction detection
+- Investment and holding tracking
+- XIRR-based investment return calculation
 
-# Planned Intelligence Features
-Automatic transaction categorization
-Spending anomaly detection
-Advanced statistical analysis
-Personalized financial insights
-What-if financial simulations
-Natural-language "Ask Your Data"
+## Planned Intelligence Features
+- Automatic transaction categorization
+- Spending anomaly detection
+- Advanced statistical analysis
+- Personalized financial insights
+- What-if financial simulations
+- Natural-language "Ask Your Data"
 
 ML features will only be introduced when they provide a meaningful advantage over simpler approaches.
 
-## Tech Stack
+# Tech Stack
 - Python 3.14
 - FastAPI
 - PostgreSQL 18.4 (Docker)
@@ -64,13 +64,13 @@ ML features will only be introduced when they provide a meaningful advantage ove
 - Alembic for migrations
 - Pydantic for validation
 
-## Current Status
+# Current Status
 - ✅ Core database models (User, Account, Category, Transaction)
 - ✅ Database constraints and validation
 - ⏳ Backend API endpoints
 - ⏳ Frontend UI
 
-## Architecture
+# Architecture
 
 The project follows a modular monolith architecture.
 
