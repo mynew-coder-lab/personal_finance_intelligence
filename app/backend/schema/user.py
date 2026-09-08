@@ -4,7 +4,7 @@ import datetime
 
 class RegisterRequest(BaseModel):
     email: EmailStr
-    password: str = Field(..., min_length=8, max_length=128, pattern=r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$')
+    password: str = Field(..., min_length=8, max_length=128)  #i set this 128 why? well for bcrypt can consume lots of cpu cycles. 
     confirm_password: str
 
     @field_validator('confirm_password')
@@ -23,6 +23,7 @@ class LoginRequest(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+    refresh_token: str
 
 
 class UserResponse(BaseModel):
@@ -32,3 +33,11 @@ class UserResponse(BaseModel):
     updated_at: datetime.datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
+
+class TokenPayload(BaseModel):
+    sub: str | None = None
+    
