@@ -4,7 +4,7 @@ import datetime
 
 class RegisterRequest(BaseModel):
     email: EmailStr
-    password: str = Field(..., min_length=8, max_length=128)  #i set this 128 why? well for bcrypt can consume lots of cpu cycles. 
+    password: str = Field(..., min_length=8, max_length=128)  #i set this 128 why? well for bcrypt can consume lots of cpu cycles. and it follows the OWASP method. 
     confirm_password: str
 
     @field_validator('confirm_password')

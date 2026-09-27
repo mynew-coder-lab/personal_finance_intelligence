@@ -1,0 +1,50 @@
+Personal Finance Intelligence - Complete Project Journey & Progress
+===================================================================
+
+1. Initial Planning & Architecture
+----------------------------------
+* Decided on the tech stack: FastAPI (Backend), PostgreSQL (Database), SQLAlchemy (ORM), Alembic (Migrations).
+* Chose a "Pragmatic Modular Monolith" architecture instead of microservices.
+* Defined a strict 4-layer unidirectional flow:
+  1. Routes (Endpoints, HTTP parsing)
+  2. Services (Business logic)
+  3. Database/Models (ORM mappings)
+  4. PostgreSQL (Storage)
+
+2. Database & Alembic Setup
+---------------------------
+* Configured PostgreSQL and created the base connection in `app/backend/database/database.py`.
+* Installed and configured Alembic for tracking database migrations over time.
+* Bound Alembic to our SQLAlchemy `Base` metadata in `alembic/env.py` so it can auto-generate migrations.
+* Created the core `User` SQLAlchemy model (with id, email, hashed_password, created_at, etc.).
+* Ran our first Alembic migrations to successfully create the `users` table in the database.
+* Upgraded the database engine to include `pool_pre_ping=True` to recover from dropped connections safely.
+* Setup a `get_db()` dependency using Python Generators (`yield`) and `try...finally` to ensure database sessions are safely closed after every request.
+
+3. "Where Did We Go Bad?" (Mistakes & Lessons Learned)
+------------------------------------------------------
+* **The Async Trap:** We realized that making FastAPI route functions `async def` while using standard synchronous SQLAlchemy causes the app to "freeze" (blocks the async event loop). We learned to use standard `def` for database routes so FastAPI can run them safely in a background worker threadpool.
+* **The Password Regex Trap:** We initially tried to use a complex regex for password validation. We realized this was bad because it blocks people from using secure, long passphrases (like password managers generate) and can cause ReDoS attacks on bcrypt. We swapped it for a simple 8 to 128-character length limit.
+* **The Environment Variable Crash:** We learned that `os.getenv` returns strings (or None). Wrapping it directly in `int(os.getenv("KEY"))` can crash the app if the variable is missing. We fixed this by providing safe defaults inside the `.get()` method.
+* **The Dictionary Mutation Danger:** When creating tokens, we realized that passing a dictionary (like `user_claims`) into our encoding function and adding an expiration time to it permanently modifies the original dictionary everywhere else in the code! We fixed this by using `.copy()` to safely duplicate the data first.
+* **The Single Token Trap:** We initially thought about just returning a single JWT. We realized this was dangerous because JWTs can't easily be revoked. We pivoted to a "Dual-Token" strategy (short-lived Access Token + long-lived Refresh Token).
+
+4. Authentication Status: How Much is Done?
+-------------------------------------------
+**[DONE] Schemas (`schema/user.py`)**
+* `RegisterRequest` (email, password, confirm_password with validation)
+* `LoginRequest` (email, password)
+* `TokenResponse` (access_token, refresh_token, token_type)
+* `RefreshTokenRequest` (for sending refresh tokens)
+* `TokenPayload` (for internally reading what's inside a token)
+
+**[DONE] Security Utilities (`utils/security.py`)**
+* Password hashing using `bcrypt`.
+* Password verification using constant-time `bcrypt.checkpw()`.
+* Access Token generation (15 minutes lifespan) using `python-jose`.
+* Refresh Token generation (30 days lifespan) using `python-jose`.
+
+**[NOT DONE YET - What's Next?]**
+* Utility to **Decode/Verify Tokens** (We are doing this right now).
+* **Auth Service (`services/auth_service.py`)**: The logic that ties it together (checking if an email is already registered, actually saving the user to the database, verifying login credentials).
+* **Auth Routes (`routes/auth.py`)**: Connecting the service to the actual HTTP `/auth/register` and `/auth/login` endpoints.
