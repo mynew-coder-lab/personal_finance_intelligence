@@ -22,7 +22,7 @@ def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.now(
         timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire, "type": "access"})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 #this line i used mainly for the creation and epiration of teh token and that will done using pyjwt. mainly it is mapped with the timeline correctly and based on that i have given the access token and refresh token to the user.
@@ -31,7 +31,7 @@ def create_refresh_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.now(
         timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire, "type": "refresh"})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 #this line is used to create refresh token and it is also mapped with the timeline correctly and based on that i have given the access token and refresh token to the user.

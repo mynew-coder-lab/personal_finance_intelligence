@@ -66,6 +66,13 @@ The core philosophy is a **strict 4-layer unidirectional flow**:
   - Both functions use `to_encode = data.copy()` to preserve immutability and prevent side-effect pollution of caller data.
   - `decode_token`: Decodes and mathematically verifies JWT signatures and expiration times using `jose.jwt.decode`. Catches `JWTError` safely and returns `dict | None` to insulate callers from unexpected decoding crashes. Explicitly enforces allowed `algorithms=[ALGORITHM]` to protect against algorithm confusion (`alg=none`) attacks.
 
+### E. Authentication Service (`app/backend/services/auth_service.py`)
+- **Pure Business Logic:** Decoupled completely from HTTP constructs (no `fastapi.Request`, no `HTTPException`). Uses standard Python `ValueError` for violations, making the service portable for background jobs or CLI scripts.
+- **Registration (`register_user`):** Checks for duplicate emails, hashes passwords securely, and creates database records. Uses `db.refresh()` to fetch assigned IDs and timestamps after commit.
+- **Authentication (`authenticate_user`):** 
+  - Prevents timing attacks and username enumeration by returning a generic `"Invalid email or password"` error regardless of whether the email was missing or the password was wrong.
+  - Uses `user_id` as the JWT subject (`sub`) claim rather than email, to ensure tokens remain valid even if the user changes their email address.
+
 ---
 
 ## 3. Where We Were Stuck & Key Conceptual Hurdles Resolved
@@ -97,7 +104,7 @@ During our discussions, we tackled several critical real-world architectural dil
 | [main.py](file:///home/shreyes/personal_finance_intelligence/app/backend/main.py) | **Needs 1 small tweak** | Ready; needs a top-level `@app.get("/health")` endpoint added. |
 | [routes/auth.py](file:///home/shreyes/personal_finance_intelligence/app/backend/routes/auth.py) | **Skeleton ready** | Route structure defined with prefix and tags; waiting for service layer. |
 | [utils/security.py](file:///home/shreyes/personal_finance_intelligence/app/backend/utils/security.py) | **Complete** | Password hashing/verification, token minting, and `decode_token` complete. |
-| `app/backend/services/` | **Pending** | Needs `auth_service.py` to hold business logic. |
+| [services/auth_service.py](file:///home/shreyes/personal_finance_intelligence/app/backend/services/auth_service.py) | **Complete** | Pure business logic for registration and login, fully decoupled from HTTP. |
 
 ---
 
@@ -112,13 +119,13 @@ Following our established sequence, here are the concrete upcoming tasks:
    └── 4.3: JWT decoding & verification (decode_token) -> [DONE]
        │
        ▼
-[Step 5: Authentication Service] Implement services/auth_service.py (NEXT)
-   ├── 5.1: Duplicate email check
-   ├── 5.2: User entity creation & password hash storage
-   └── 5.3: User credential authentication & token generation
+[Step 5: Authentication Service] Implement services/auth_service.py (COMPLETE)
+   ├── 5.1: Duplicate email check -> [DONE]
+   ├── 5.2: User entity creation & password hash storage -> [DONE]
+   └── 5.3: User credential authentication & token generation -> [DONE]
        │
        ▼
-[Step 6: Endpoints] Wire routes/auth.py
+[Step 6: Endpoints] Wire routes/auth.py (NEXT)
    ├── 6.1: Real POST /auth/register
    ├── 6.2: Real POST /auth/login
    └── 6.3: Real POST /auth/refresh

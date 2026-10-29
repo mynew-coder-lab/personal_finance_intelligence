@@ -1,7 +1,10 @@
 import os
-from dotenv import load_dotenv
+from pathlib import Path
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv()
+# Search for .env in current directory or app/
+_env_path = find_dotenv() or find_dotenv("app/.env")
+load_dotenv(_env_path)
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 SECRET_KEY = os.getenv("SECRET_KEY")

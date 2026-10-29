@@ -5,3 +5,6 @@ app = FastAPI(title="Personal Finance Intelligence", description="A complete per
 
 app.include_router(auth.router)
 
+@app.get("/health", tags = ["Health"])
+def health_check():
+    return {"status": "ok"}
