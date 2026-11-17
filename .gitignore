@@ -9,3 +9,5 @@ docker-compose.yml
 alembic.ini
 Target.txt
 PROGRESS.md
+docs/
+tests/
